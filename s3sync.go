@@ -15,6 +15,7 @@ package s3sync
 import (
 	"context"
 	"errors"
+	"mime"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -27,7 +28,6 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3iface"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
-	"github.com/gabriel-vasile/mimetype"
 )
 
 // Manager manages the sync operation.
@@ -319,11 +319,13 @@ func (m *Manager) upload(file *fileInfo, sourcePath string, destPath *s3Path) er
 	case m.contentType != nil:
 		contentType = m.contentType
 	case m.guessMime:
-		mime, err := mimetype.DetectFile(sourceFilename)
-		if err != nil {
-			return err
-		}
-		s := mime.String()
+		//mime, err := file.mimetype.DetectFile(sourceFilename)
+		//if err != nil {
+		//	return err
+		//}
+		//s := mime.String()
+		//
+		s := mime.TypeByExtension(filepath.Ext(file.name))
 		contentType = &s
 	}
 
